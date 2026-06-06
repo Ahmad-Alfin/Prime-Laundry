@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: prime-laundry
+    env: php
+    buildCommand: composer install --no-dev --optimize-autoloader
+    startCommand: apache2-foreground
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
