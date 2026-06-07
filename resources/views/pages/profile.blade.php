@@ -61,17 +61,34 @@
 
     {{-- Card Informasi Data Diri Pelanggan --}}
     <div class="card" style="background: #fff; border-radius: 16px; box-shadow: 0 4px 25px rgba(0,0,0,0.06); padding: 2rem; border: 1px solid #f1f5f9; margin-bottom: 1.5rem;">
-        <div style="display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.5rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 1.5rem;">
-            <div class="avatar-lg" style="width: 64px; height: 64px; border-radius: 50%; background: #00AEEF; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; flex-shrink: 0;">
-                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+        
+        {{-- HEADER CARD: Avatar, Nama & Tombol Logout --}}
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.5rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; align-items: center; gap: 1.25rem;">
+                <div class="avatar-lg" style="width: 64px; height: 64px; border-radius: 50%; background: #00AEEF; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; flex-shrink: 0;">
+                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                </div>
+                <div>
+                    <h2 style="font-weight: 900; font-size: 1.4rem; margin: 0 0 4px 0; color: #1e3a5f;">{{ auth()->user()->name }}</h2>
+                    <p style="color: #64748b; margin: 0; font-size: 0.95rem;">{{ auth()->user()->email }}</p>
+                    @if(auth()->user()->social_provider)
+                        <p style="font-size: 0.8rem; color: #00AEEF; margin: 4px 0 0 0; font-weight: 700;">Login via {{ ucfirst(auth()->user()->social_provider) }}</p>
+                    @endif
+                </div>
             </div>
-            <div>
-                <h2 style="font-weight: 900; font-size: 1.4rem; margin: 0 0 4px 0; color: #1e3a5f;">{{ auth()->user()->name }}</h2>
-                <p style="color: #64748b; margin: 0; font-size: 0.95rem;">{{ auth()->user()->email }}</p>
-                @if(auth()->user()->social_provider)
-                    <p style="font-size: 0.8rem; color: #00AEEF; margin: 4px 0 0 0; font-weight: 700;">Login via {{ ucfirst(auth()->user()->social_provider) }}</p>
-                @endif
-            </div>
+
+            {{-- TOMBOL LOGOUT --}}
+            <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                @csrf
+                <button type="submit" style="display: flex; align-items: center; gap: 6px; background: #fee2e2; color: #ef4444; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 0.85rem;" onmouseover="this.style.background='#fecaca'" onmouseout="this.style.background='#fee2e2'">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Keluar
+                </button>
+            </form>
         </div>
 
         <form method="POST" action="{{ route('profile.update') }}" id="profileForm">
@@ -119,7 +136,7 @@
     </div>
 
     {{-- SEKSI OTOMATIS: KARTU PREMIUM MEMBERSHIP --}}
-    @if($membership)
+    @if(isset($membership) && $membership)
         @if($membership['is_active'])
             <div class="membership-card {{ strtolower($membership['membership']) }}">
                 <div class="card-header-premium">
